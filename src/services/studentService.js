@@ -3,7 +3,19 @@ import prisma from "../config/prismaClient.js";
 // Read operations
 const getAllStudents = async () => {
   try {
-    const students = await prisma.student.findMany();
+    const students = await prisma.student.findMany({
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+        department: true,
+        applications: true,
+      },
+    });
     return students;
   } catch (error) {
     throw new Error(error.message);
@@ -116,7 +128,6 @@ const deleteByStudentId = async (studentId) => {
     throw new Error(error.message);
   }
 };
-
 
 export default {
   createStudent,

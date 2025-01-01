@@ -18,4 +18,5 @@ router.put("/:id", statusController.updateStatus);
 // Route to delete a status by ID
 router.delete("/:id", statusController.deleteStatus);
 
+
 export default router;

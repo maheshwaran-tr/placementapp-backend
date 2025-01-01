@@ -1,21 +1,20 @@
 import prisma from "../config/prismaClient.js";
 
-const createAdmin = async (data) => {
-  try {
-    const admin = await prisma.admin.create({
-      data,
-    });
-    return admin;
-  } catch (error) {
-    throw new Error(`Error in creating admin - ${error.message}`);
-  }
-};
 
 const getByUserId = async (user_id) => {
   try {
     const admin = await prisma.admin.findUnique({
       where: {
         user_id,
+      },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
       },
     });
     return admin;
@@ -26,7 +25,17 @@ const getByUserId = async (user_id) => {
 
 const getAllAdmins = async () => {
   try {
-    const admins = await prisma.admin.findMany();
+    const admins = await prisma.admin.findMany({
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
     return admins;
   } catch (error) {
     throw new Error(`Error in getting all admins - ${error.message}`);
@@ -39,10 +48,31 @@ const getAdminById = async (admin_id) => {
       where: {
         admin_id,
       },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
     });
     return admin;
   } catch (error) {
     throw new Error(`Error in getting admin by id - ${error.message}`);
+  }
+};
+
+const createAdmin = async (data) => {
+  try {
+    const admin = await prisma.admin.create({
+      data,
+    });
+    
+    return admin;
+  } catch (error) {
+    throw new Error(`Error in creating admin - ${error.message}`);
   }
 };
 
@@ -74,10 +104,10 @@ const deleteAdmin = async (admin_id) => {
 };
 
 export default {
-    getAllAdmins,
-    getAdminById,
-    getByUserId,
-    createAdmin,
-    updateAdmin,
-    deleteAdmin,
+  getAllAdmins,
+  getAdminById,
+  getByUserId,
+  createAdmin,
+  updateAdmin,
+  deleteAdmin,
 };

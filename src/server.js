@@ -8,6 +8,7 @@ import staffRoutes from "./routes/staffRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import companyRoutes from "./routes/companyRoutes.js";
 import driverRoutes from "./routes/driveRoutes.js";
+import fileRoutes from "./routes/fileRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
 dotenv.config();
@@ -25,10 +26,12 @@ app.use("/staff", staffRoutes);
 app.use("/admin", adminRoutes);
 app.use("/company", companyRoutes);
 app.use("/drive", driverRoutes);
+app.use("/files", fileRoutes);
+
 
 // Home route
 app.get("/", (req, res) => {
-  res.send("Hello, Express.js!");
+  res.send("Hello, Mahesh.js!");
 });
 
 // Handle unmatched routes (404)
