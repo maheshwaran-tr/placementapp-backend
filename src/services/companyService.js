@@ -2,7 +2,11 @@ import prisma from "../config/prismaClient.js";
 
 const getAllCompanies = async () => {
   try {
-    const companies = await prisma.company.findMany();
+    const companies = await prisma.company.findMany({
+      include:{
+        drives: true
+      }
+    });
     return companies;
   } catch (error) {
     throw new Error(error.message);
@@ -13,6 +17,9 @@ const getByCompanyId = async (id) => {
   try {
     const company = await prisma.company.findUnique({
       where: { company_id: id },
+      include:{
+        drives: true
+      }
     });
     return company;
   } catch (error) {

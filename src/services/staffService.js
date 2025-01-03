@@ -2,7 +2,18 @@ import prisma from "../config/prismaClient.js";
 
 const allStaffs = async () => {
   try {
-    const staffs = await prisma.staff.findMany();
+    const staffs = await prisma.staff.findMany({
+      include:{
+        department:true,
+        user:{
+          select:{
+            user_id:true,
+            username:true,
+            email:true,
+          }
+        }
+      }
+    });
     return staffs;
   } catch (error) {
     throw new Error(error.message);
@@ -15,6 +26,16 @@ const getByStaffId = async (id) => {
       where: {
         staff_id: id,
       },
+      include:{
+        department:true,
+        user:{
+          select:{
+            user_id:true,
+            username:true,
+            email:true,
+          }
+        }
+      }
     });
     return staff;
   } catch (error) {
@@ -28,6 +49,16 @@ const getByUserId = async (id) => {
       where: {
         user_id: id,
       },
+      include:{
+        department:true,
+        user:{
+          select:{
+            user_id:true,
+            username:true,
+            email:true,
+          }
+        }
+      }
     });
     return staff;
   } catch (error) {

@@ -2,7 +2,12 @@ import prisma from "../config/prismaClient.js";
 
 const getAllDepartments = async () => {
   try {
-    const departments = await prisma.department.findMany();
+    const departments = await prisma.department.findMany({
+      include:{
+        students:true,
+        staff:true
+      }
+    });
     return departments;
   } catch (error) {
     throw new Error(error.message);
@@ -13,6 +18,10 @@ const getDepartmentById = async (id) => {
   try {
     const department = await prisma.department.findUnique({
       where: { dept_id: id },
+      include:{
+        students:true,
+        staff:true
+      }
     });
     return department;
   } catch (error) {

@@ -37,8 +37,37 @@ const getByStudentId = async (req, res, next) => {
     const id = parseInt(req.params.id);
     const student = await studentService.getByStudentId(id);
     res.json(student);
+  } catch (error) {
+    const err = new Error(error.message);
+    next(err);
   }
-  catch (error) {
+};
+
+const getStudentsByDept = async (req, res, next) => {
+  try {
+    const dept = req.params.dept;
+    const students = await studentService.getStudentsByDept(dept);
+    res.json(students);
+  } catch (error) {
+    const err = new Error(error.message);
+    next(err);
+  }
+};
+
+const getStudentsByPlacementWilling = async (req, res, next) => {
+  try {
+    const placementWilling = req.params.placementWilling;
+    if (placementWilling === "yes" || placementWilling === "no") {
+      const students = await studentService.getStudentsByPlacementWilling(
+        placementWilling
+      );
+      res.json(students);
+    } else {
+      const err = new Error("placementWilling should be either yes or no");
+      err.statusCode = 400;
+      next(err);
+    }
+  } catch (error) {
     const err = new Error(error.message);
     next(err);
   }
@@ -59,10 +88,7 @@ const updateByStudentId = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     const student = req.body;
-    const updatedStudent = await studentService.updateByStudentId(
-      id,
-      student
-    );
+    const updatedStudent = await studentService.updateByStudentId(id, student);
     res.json(updatedStudent);
   } catch (error) {
     const err = new Error(error.message);
@@ -87,6 +113,8 @@ export default {
   getStudentByRollno,
   getStudentByUserId,
   getByStudentId,
+  getStudentsByPlacementWilling,
+  getStudentsByDept,
   createStudent,
   updateByStudentId,
   deleteByStudentId,

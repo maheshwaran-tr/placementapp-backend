@@ -10,6 +10,6 @@ router.post("/register", authController.register);
 
 router.post("/login", authController.login);
 
-router.post("/refresh-token", validateToken, authController.refreshTheToken);
+router.post("/refresh-token", authController.refreshTheToken);
 
 export default router;

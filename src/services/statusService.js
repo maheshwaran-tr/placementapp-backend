@@ -2,7 +2,11 @@ import prisma from "../config/prismaClient.js";
 
 const getAllStatuses = async () => {
   try {
-    const statuses = await prisma.status.findMany();
+    const statuses = await prisma.status.findMany({
+      include: {
+        applications: true,
+      },
+    });
     return statuses;
   } catch (error) {
     throw new Error(error.message);
@@ -13,6 +17,9 @@ const getStatusById = async (id) => {
   try {
     const status = await prisma.status.findUnique({
       where: { status_id: id },
+      include: {
+        applications: true,
+      },
     });
     return status;
   } catch (error) {

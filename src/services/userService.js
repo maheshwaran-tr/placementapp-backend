@@ -2,7 +2,13 @@ import prisma from "../config/prismaClient.js";
 
 const getAllUsers = async () => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      include:{
+        student:true,
+        staff:true,
+        admin:true
+      }
+    });
     return users;
   } catch (error) {
     throw new Error(error.message);
@@ -13,6 +19,11 @@ const findUserByUsername = async (username) => {
   try {
     const user = await prisma.user.findUnique({
       where: { username },
+      include:{
+        student:true,
+        staff:true,
+        admin:true
+      }
     });
     return user;
   } catch (error) {
@@ -24,6 +35,11 @@ const findUserById = async (id) => {
   try {
     const user = await prisma.user.findUnique({
       where: { user_id: id },
+      include:{
+        student:true,
+        staff:true,
+        admin:true
+      }
     });
     return user;
   } catch (error) {

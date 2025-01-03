@@ -22,6 +22,7 @@ const getFileUrl = (fileName) => {
   const { data, error } = supabase.storage
     .from(BUCKET_NAME)
     .getPublicUrl(fileName);
+  
   if (error) {
     throw new Error(error.message);
   }

@@ -10,6 +10,9 @@ import companyRoutes from "./routes/companyRoutes.js";
 import driverRoutes from "./routes/driveRoutes.js";
 import fileRoutes from "./routes/fileRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import departmentRoutes from "./routes/departmentRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+import statusRoutes from "./routes/statusRoutes.js";
 
 dotenv.config();
 
@@ -20,18 +23,20 @@ app.use(express.json());
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
-app.use("/students", studentRoutes);
+app.use("/user", userRoutes);
+app.use("/student", studentRoutes);
 app.use("/staff", staffRoutes);
 app.use("/admin", adminRoutes);
 app.use("/company", companyRoutes);
 app.use("/drive", driverRoutes);
-app.use("/files", fileRoutes);
-
+app.use("/file", fileRoutes);
+app.use("/dept", departmentRoutes);
+app.use("/application", applicationRoutes);
+app.use("/status", statusRoutes);
 
 // Home route
 app.get("/", (req, res) => {
-  res.send("Hello, Mahesh.js!");
+  res.send("Hello, Express.js!");
 });
 
 // Handle unmatched routes (404)

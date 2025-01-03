@@ -2,7 +2,12 @@ import prisma from "../config/prismaClient.js";
 
 const getAllDrives = async () => {
   try {
-    const drives = await prisma.drive.findMany();
+    const drives = await prisma.drive.findMany({
+      include: {
+        company: true,
+        applications: true,
+      },
+    });
     return drives;
   } catch (error) {
     throw new Error(error.message);
@@ -11,7 +16,13 @@ const getAllDrives = async () => {
 
 const getDriveById = async (id) => {
   try {
-    const drive = await prisma.drive.findUnique({ where: { drive_id: id } });
+    const drive = await prisma.drive.findUnique({
+      where: { drive_id: id },
+      include: {
+        company: true,
+        applications: true,
+      },
+    });
     return drive;
   } catch (error) {
     throw new Error(error.message);
@@ -48,11 +59,10 @@ const deleteDrive = async (id) => {
   }
 };
 
-
 export default {
-    getAllDrives,
-    getDriveById,
-    addDrive,
-    updateDrive,
-    deleteDrive
+  getAllDrives,
+  getDriveById,
+  addDrive,
+  updateDrive,
+  deleteDrive,
 };

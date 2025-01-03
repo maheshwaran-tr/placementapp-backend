@@ -28,6 +28,17 @@ const getByRollno = async (rollno) => {
       where: {
         rollno: rollno,
       },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+        department: true,
+        applications: true,
+      },
     });
     return student;
   } catch (error) {
@@ -40,6 +51,17 @@ const getByUserId = async (userId) => {
     const student = await prisma.student.findUnique({
       where: {
         userId: userId,
+      },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+        department: true,
+        applications: true,
       },
     });
     return student;
@@ -54,8 +76,67 @@ const getByStudentId = async (studentId) => {
       where: {
         student_id: studentId,
       },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+        department: true,
+        applications: true,
+      },
     });
     return student;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const getStudentsByDept = async (deptId) => {
+  try {
+    const students = await prisma.student.findMany({
+      where: {
+        dept_id: deptId,
+      },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+        department: true,
+        applications: true,
+      },
+    });
+    return students;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const getStudentsByPlacementWilling = async (placementWilling) => {
+  try {
+    const students = await prisma.student.findMany({
+      where: {
+        placement_willing: placementWilling,
+      },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            email: true,
+          },
+        },
+        department: true,
+        applications: true,
+      },
+    });
+    return students;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -129,12 +210,15 @@ const deleteByStudentId = async (studentId) => {
   }
 };
 
+
 export default {
   createStudent,
   getAllStudents,
   getByRollno,
   getByUserId,
   getByStudentId,
+  getStudentsByDept,
+  getStudentsByPlacementWilling,
   updateByRollno,
   updateByStudentId,
   deleteByRollno,
