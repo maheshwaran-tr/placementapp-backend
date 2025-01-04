@@ -6,8 +6,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
-router.post('/upload', upload.single('file'), fileController.uploadFile);
-router.get('/:fileName', fileController.getFileUrl);
-router.delete('/:fileName', fileController.deleteFile);
+router.post('/upload/:folderContext', upload.single('file'), fileController.uploadFile);
+router.get('/:fileName/:folderContext', fileController.getFileUrl);
+router.delete('/:fileName/:folderContext', fileController.deleteFile);
 
 export default router;
