@@ -57,7 +57,7 @@ const applyForDrive = async (studentId, driveId) => {
       data: {
         student_id: studentId,
         drive_id: driveId,
-        status_id: 1, // Status ID for applying stage
+        status_id: 1, // Status ID for applying stage (Wl)
       },
     });
 

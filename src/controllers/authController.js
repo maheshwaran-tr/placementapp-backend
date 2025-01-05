@@ -74,6 +74,7 @@ const register = async (req, res, next) => {
         password: hashedPassword,
         role,
       });
+      
       if (user.role === "admin") {
         // Data except email, password and role
         const { username, password, role, ...adminData } = req.body;
