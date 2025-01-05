@@ -12,6 +12,7 @@ router.get("/:id", driveController.getDriveById);
 
 // Route to add a new drive
 router.post("/", driveController.addDrive);
+router.post("/all/", driveController.addMultipleDrive);
 
 // Route to update a drive by ID
 router.put("/:id", driveController.updateDrive);

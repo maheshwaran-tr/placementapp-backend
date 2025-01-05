@@ -112,6 +112,85 @@ const register = async (req, res, next) => {
   }
 };
 
+const registerAll = async (req, res, next) => {
+  const userList = req.body.data; // Array of users
+
+  try {
+    // Loop through each user in the list
+    for (let i = 0; i < userList.length; i++) {
+      console.log(`Registering user ${i + 1} of ${userList.length}`);
+      const user = userList[i];
+      const { username, email, password, role } = user;
+
+      // Check if user already exists by username
+      const alreadyExists = await userService.findUserByUsername(username);
+      if (alreadyExists) {
+        const err = new Error(`User with username ${username} already exists`);
+        err.statusCode = 400;
+        return next(err);
+      }
+
+      // Validate the role
+      if (role !== "admin" && role !== "staff" && role !== "student") {
+        const err = new Error(`Invalid role for user ${username}`);
+        err.statusCode = 400;
+        return next(err);
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Start the transaction to create user and their corresponding data
+      const result = await prisma.$transaction(async (prisma) => {
+        const userData = await userService.createUser({
+          username,
+          email,
+          password: hashedPassword,
+          role,
+        });
+
+        let resData;
+        // Create role-specific data (Admin, Staff, or Student)
+        if (userData.role === "admin") {
+          const { username, password, role, ...adminData } = user;
+          const admin = await adminService.createAdmin({
+            user_id: userData.user_id,
+            admin_rollno: userData.username,
+            ...adminData,
+          });
+          resData = { user: userData, admin };
+        } else if (userData.role === "staff") {
+          const { username, password, role, ...staffData } = user;
+          const staff = await staffService.createStaff({
+            user_id: userData.user_id,
+            staff_rollno: userData.username,
+            ...staffData,
+          });
+          resData = { user: userData, staff };
+        } else {
+          const { username, password, role, ...studentData } = user;
+          const student = await studentService.createStudent({
+            user_id: userData.user_id,
+            rollno: userData.username,
+            ...studentData,
+          });
+          resData = { user: userData, student };
+        }
+
+        return resData;
+      });
+
+      // Send response after registering each user
+      if (i === userList.length - 1) {
+        res.status(201).json(result);
+      }
+    }
+  } catch (error) {
+    const err = new Error(`Error in registering user - ${error.message}`);
+    next(err);
+  }
+};
+
+
 const refreshTheToken = async (req, res, next) => {
   try {
     const refreshToken = req.body.refreshToken; // Extract refreshToken from the body
@@ -183,4 +262,4 @@ const refreshTheToken = async (req, res, next) => {
 //   }
 // };
 
-export default { login, register, refreshTheToken };
+export default { login, register, refreshTheToken,registerAll };

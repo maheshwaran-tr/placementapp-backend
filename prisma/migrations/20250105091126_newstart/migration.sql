@@ -1,11 +1,9 @@
--- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('student', 'staff', 'admin');
-
 -- CreateTable
 CREATE TABLE "Department" (
     "dept_id" SERIAL NOT NULL,
-    "name" VARCHAR(5) NOT NULL,
-    "description" VARCHAR(100),
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "logo_url" TEXT,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("dept_id")
 );
@@ -13,8 +11,8 @@ CREATE TABLE "Department" (
 -- CreateTable
 CREATE TABLE "Status" (
     "status_id" SERIAL NOT NULL,
-    "status" VARCHAR(5) NOT NULL,
-    "description" VARCHAR(100),
+    "status" TEXT NOT NULL,
+    "description" TEXT,
 
     CONSTRAINT "Status_pkey" PRIMARY KEY ("status_id")
 );
@@ -23,7 +21,7 @@ CREATE TABLE "Status" (
 CREATE TABLE "User" (
     "user_id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "email" VARCHAR(100) NOT NULL,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "UserRole" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -35,27 +33,31 @@ CREATE TABLE "User" (
 CREATE TABLE "Student" (
     "student_id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "rollno" VARCHAR(10),
-    "regno" VARCHAR(20),
-    "name" VARCHAR(100) NOT NULL,
+    "rollno" TEXT,
+    "regno" TEXT,
+    "name" TEXT NOT NULL,
     "dept_id" INTEGER NOT NULL,
-    "gender" VARCHAR(6),
-    "father_name" VARCHAR(100),
-    "dob" VARCHAR(20),
+    "gender" TEXT,
+    "father_name" TEXT,
+    "dob" TEXT,
     "score_10th" INTEGER,
-    "board_10th" VARCHAR(20),
+    "board_10th" TEXT,
     "yop_10th" INTEGER,
     "score_12th" INTEGER,
-    "board_12th" VARCHAR(20),
+    "board_12th" TEXT,
     "yop_12th" INTEGER,
     "score_diploma" INTEGER,
-    "branch_diploma" VARCHAR(10),
+    "branch_diploma" TEXT,
     "yop_diploma" INTEGER,
     "cgpa" DOUBLE PRECISION,
-    "phone_number" VARCHAR(15),
-    "email" VARCHAR(100),
-    "placement_willing" VARCHAR(50),
+    "phone_number" TEXT,
+    "email" TEXT,
+    "placement_willing" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "current_arrears" INTEGER NOT NULL DEFAULT 0,
+    "history_of_arrears" INTEGER NOT NULL DEFAULT 0,
+    "resume_url" TEXT,
+    "profile_url" TEXT,
 
     CONSTRAINT "Student_pkey" PRIMARY KEY ("student_id")
 );
@@ -64,11 +66,12 @@ CREATE TABLE "Student" (
 CREATE TABLE "Staff" (
     "staff_id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "staff_rollno" VARCHAR(10),
+    "staff_rollno" TEXT,
     "dept_id" INTEGER NOT NULL,
-    "phone_number" VARCHAR(15),
-    "email" VARCHAR(100),
+    "phone_number" TEXT,
+    "email" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "profile_url" TEXT,
 
     CONSTRAINT "Staff_pkey" PRIMARY KEY ("staff_id")
 );
@@ -77,9 +80,12 @@ CREATE TABLE "Staff" (
 CREATE TABLE "Admin" (
     "admin_id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "phone_number" VARCHAR(15),
-    "email" VARCHAR(100),
+    "phone_number" TEXT,
+    "email" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "admin_rollno" TEXT,
+    "name" TEXT,
+    "profile_url" TEXT,
 
     CONSTRAINT "Admin_pkey" PRIMARY KEY ("admin_id")
 );
@@ -87,8 +93,9 @@ CREATE TABLE "Admin" (
 -- CreateTable
 CREATE TABLE "Company" (
     "company_id" SERIAL NOT NULL,
-    "company_name" VARCHAR(50) NOT NULL,
+    "company_name" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "logo_url" TEXT,
 
     CONSTRAINT "Company_pkey" PRIMARY KEY ("company_id")
 );
@@ -97,16 +104,24 @@ CREATE TABLE "Company" (
 CREATE TABLE "Drive" (
     "drive_id" SERIAL NOT NULL,
     "company_id" INTEGER NOT NULL,
-    "job_role" VARCHAR(50) NOT NULL,
-    "location" VARCHAR(30),
-    "description" VARCHAR(100),
-    "salary" VARCHAR(10),
+    "job_role" TEXT NOT NULL,
+    "location" TEXT,
+    "description" TEXT,
+    "salary" TEXT,
     "drive_date" TIMESTAMP(3),
-    "drive_time" VARCHAR(20),
+    "drive_time" TEXT,
     "eligible_10th_mark" INTEGER,
     "eligible_12th_mark" INTEGER,
     "eligible_cgpa" DOUBLE PRECISION,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "training_period" TEXT,
+    "training_stipend" TEXT,
+    "eligible_current_arrears" INTEGER,
+    "eligible_history_of_arrears" INTEGER,
+    "job_type" TEXT,
+    "mode" TEXT,
+    "required_skills" TEXT[],
+    "venue" TEXT,
 
     CONSTRAINT "Drive_pkey" PRIMARY KEY ("drive_id")
 );
@@ -118,6 +133,7 @@ CREATE TABLE "Application" (
     "drive_id" INTEGER NOT NULL,
     "status_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "proof_url" TEXT,
 
     CONSTRAINT "Application_pkey" PRIMARY KEY ("application_id")
 );
@@ -156,10 +172,10 @@ ALTER TABLE "Admin" ADD CONSTRAINT "Admin_user_id_fkey" FOREIGN KEY ("user_id") 
 ALTER TABLE "Drive" ADD CONSTRAINT "Drive_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("company_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Application" ADD CONSTRAINT "Application_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "Student"("student_id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Application" ADD CONSTRAINT "Application_drive_id_fkey" FOREIGN KEY ("drive_id") REFERENCES "Drive"("drive_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Application" ADD CONSTRAINT "Application_status_id_fkey" FOREIGN KEY ("status_id") REFERENCES "Status"("status_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Application" ADD CONSTRAINT "Application_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "Student"("student_id") ON DELETE RESTRICT ON UPDATE CASCADE;

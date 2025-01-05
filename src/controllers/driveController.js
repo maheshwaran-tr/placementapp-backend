@@ -30,7 +30,9 @@ const getDriveById = async (req, res, next) => {
       res.status(200).json(drive);
     }
   } catch (error) {
-    const err = new Error(`Error while fetching drive by ID - ${error.message}`);
+    const err = new Error(
+      `Error while fetching drive by ID - ${error.message}`
+    );
     err.statusCode = 500;
     next(err);
   }
@@ -45,6 +47,21 @@ const addDrive = async (req, res, next) => {
     const err = new Error(`Error while adding drive - ${error.message}`);
     err.statusCode = 500;
     next(err);
+  }
+};
+
+const addMultipleDrive = async (req, res, next) => {
+  const drives = req.body;
+  for (let i = 0; i < drives.length; i++) {
+    console.log(`Adding drive ${i + 1} of ${drives.length}`);
+    try {
+      const newDrive = await driveService.addDrive(drives[i]);
+    } catch (error) {
+      const err = new Error(`Error while adding drive - ${error.message}`);
+      err.statusCode = 500;
+      return next(err);
+    }
+    res.status(201).json({"message":"success"});
   }
 };
 
@@ -87,6 +104,7 @@ const deleteDrive = async (req, res, next) => {
 export default {
   getAllDrives,
   getDriveById,
+  addMultipleDrive,
   addDrive,
   updateDrive,
   deleteDrive,

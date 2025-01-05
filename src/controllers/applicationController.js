@@ -3,9 +3,9 @@ import applicationService from "../services/applicationService.js";
 // Apply for a drive
 const applyForDrive = async (req, res, next) => {
   try {
-    const { studentId, driveId } = req.body;
+    const { student_id, drive_id } = req.body;
 
-    const application = await applicationService.applyForDrive(studentId, driveId);
+    const application = await applicationService.applyForDrive(student_id, drive_id);
 
     res.status(201).json(application);
 

@@ -1,18 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-//generator client {
-//  provider = "prisma-client-js"
-//}
-
-//datasource db {
-//  provider = "postgresql"
-//  url      = env("DATABASE_URL") // Update with your database connection string
-//}
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,137 +8,140 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-        
 model Department {
-  dept_id      Int        @id @default(autoincrement())
-  name         String     @db.VarChar(5)
-  description  String?    @db.VarChar(100)
-  students     Student[]
-  staff        Staff[]
+  dept_id     Int       @id @default(autoincrement())
+  name        String    
+  description String?   
+  logo_url    String?   
+  staff       Staff[]
+  students    Student[]
 }
 
 model Status {
-  status_id    Int        @id @default(autoincrement())
-  status       String     @db.VarChar(5)
-  description  String?    @db.VarChar(100)
+  status_id    Int           @id @default(autoincrement())
+  status       String        
+  description  String?       
   applications Application[]
 }
 
 model User {
-  user_id      Int        @id @default(autoincrement())
-  username     String     @unique
-  email        String     @unique @db.VarChar(100)
-  password     String
-  role         UserRole
+  user_id    Int      @id @default(autoincrement())
+  username   String   @unique
+  email      String   @unique
+  password   String
+  role       UserRole
+  created_at DateTime @default(now())
+  admin      Admin?
+  staff      Staff?
+  student    Student?
+}
+
+model Student {
+  student_id         Int           @id @default(autoincrement())
+  user_id            Int           @unique
+  rollno             String?       
+  regno              String?       
+  name               String        
+  dept_id            Int
+  gender             String?       
+  father_name        String?       
+  dob                String?       
+  score_10th         Int?
+  board_10th         String?       
+  yop_10th           Int?
+  score_12th         Int?
+  board_12th         String?       
+  yop_12th           Int?
+  score_diploma      Int?
+  branch_diploma     String?       
+  yop_diploma        Int?
+  cgpa               Float?
+  phone_number       String?       
+  email              String?       
+  placement_willing  String?       
+  created_at         DateTime      @default(now())
+  current_arrears    Int           @default(0)
+  history_of_arrears Int           @default(0)
+  resume_url         String?
+  profile_url        String?      
+  applications       Application[]
+  department         Department    @relation(fields: [dept_id], references: [dept_id])
+  user               User          @relation(fields: [user_id], references: [user_id])
+}
+
+model Staff {
+  staff_id     Int        @id @default(autoincrement())
+  user_id      Int        @unique
+  staff_rollno String?    
+  dept_id      Int
+  name         String     @default("Arun")
+  phone_number String?    
+  email        String?    
   created_at   DateTime   @default(now())
-  student      Student?
-  staff        Staff?
-  admin        Admin?
+  profile_url  String?    
+  department   Department @relation(fields: [dept_id], references: [dept_id])
+  user         User       @relation(fields: [user_id], references: [user_id])
+}
+
+model Admin {
+  admin_id     Int      @id @default(autoincrement())
+  user_id      Int      @unique
+  phone_number String?  
+  email        String?  
+  created_at   DateTime @default(now())
+  admin_rollno String?  
+  name         String?  
+  profile_url  String?  
+  user         User     @relation(fields: [user_id], references: [user_id])
+}
+
+model Company {
+  company_id   Int      @id @default(autoincrement())
+  company_name String   
+  created_at   DateTime @default(now())
+  logo_url     String?  
+  drives       Drive[]
+}
+
+model Drive {
+  drive_id                    Int           @id @default(autoincrement())
+  company_id                  Int
+  job_role                    String        
+  location                    String?       
+  description                 String?       
+  salary                      String?       
+  drive_date                  DateTime?
+  drive_time                  String?       
+  eligible_10th_mark          Int?
+  eligible_12th_mark          Int?
+  eligible_cgpa               Float?
+  created_at                  DateTime      @default(now())
+  training_period             String?       
+  training_stipend            String?       
+  eligible_current_arrears    Int?
+  eligible_history_of_arrears Int?
+  job_type                    String?
+  number_of_rounds            Int
+  required_skills             String[]
+  venue                       String?
+  applications                Application[]
+  company                     Company       @relation(fields: [company_id], references: [company_id])
+}
+
+model Application {
+  application_id Int      @id @default(autoincrement())
+  student_id     Int
+  drive_id       Int
+  status_id      Int
+  created_at     DateTime @default(now())
+  proof_url      String?
+  drive          Drive    @relation(fields: [drive_id], references: [drive_id])
+  status         Status   @relation(fields: [status_id], references: [status_id])
+  student        Student  @relation(fields: [student_id], references: [student_id])
 }
 
 enum UserRole {
   student
   staff
   admin
-}
-
-model Student {
-  student_id      Int       @id @default(autoincrement())
-  user_id         Int       @unique
-  rollno          String?   @db.VarChar(10)
-  regno           String?   @db.VarChar(20)
-  name            String    @db.VarChar(100)
-  dept_id         Int
-  gender          String?   @db.VarChar(6)
-  father_name     String?   @db.VarChar(100)
-  dob             String?   @db.VarChar(20)
-  score_10th      Int?
-  board_10th      String?   @db.VarChar(20)
-  yop_10th        Int?
-  score_12th      Int?
-  board_12th      String?   @db.VarChar(20)
-  yop_12th        Int?
-  score_diploma   Int?
-  branch_diploma  String?   @db.VarChar(10)
-  yop_diploma     Int?
-  cgpa            Float?
-  phone_number    String?   @db.VarChar(15)
-  email           String?   @db.VarChar(100)
-  placement_willing String? @db.VarChar(50)
-  profile_url     String?
-  resume_url      String?
-  created_at      DateTime  @default(now())
-  applications    Application[]
-  department      Department @relation(fields: [dept_id], references: [dept_id])
-  user            User       @relation(fields: [user_id], references: [user_id])
-}
-
-model Staff {
-  staff_id       Int        @id @default(autoincrement())
-  user_id        Int        @unique
-  staff_rollno   String?    @db.VarChar(10)
-  dept_id        Int
-  phone_number   String?    @db.VarChar(15)
-  email          String?    @db.VarChar(100)
-  profile_url    String?
-  created_at     DateTime   @default(now())
-  department     Department @relation(fields: [dept_id], references: [dept_id])
-  user           User       @relation(fields: [user_id], references: [user_id])
-}
-
-model Admin {
-  admin_id       Int        @id @default(autoincrement())
-  admin_rollno   String?    @db.VarChar(10)
-  name           String?    @db.VarChar(100)
-  user_id        Int        @unique
-  phone_number   String?    @db.VarChar(15)
-  email          String?    @db.VarChar(100)
-  profile_url    String?
-  created_at     DateTime   @default(now())
-  user           User       @relation(fields: [user_id], references: [user_id])
-}
-
-model Company {
-  company_id     Int        @id @default(autoincrement())
-  company_name   String     @db.VarChar(50)
-  logo_url       String?
-  created_at     DateTime   @default(now())
-  drives         Drive[]
-}
-
-model Drive {
-  drive_id           Int        @id @default(autoincrement())
-  company_id         Int
-  job_role           String     @db.VarChar(50)
-  location           String?    @db.VarChar(30)
-  description        String?    @db.VarChar(100)
-  salary             String?    @db.VarChar(10)
-  training_period    String?    @db.VarChar(40)
-  training_stipend   String?    @db.VarChar(10)
-  drive_date         DateTime?
-  drive_time         String?    @db.VarChar(20)
-  eligible_10th_mark Int?
-  eligible_12th_mark Int?
-  eligible_cgpa      Float?
-  eligible_history_of_arrears Int?
-  eligible_current_arrears Int?
-  mode               String?
-  venue              String?
-  job_type           String?
-  required_skills    String[]
-  created_at         DateTime   @default(now())
-  company            Company    @relation(fields: [company_id], references: [company_id])
-  applications       Application[]
-}
-
-model Application {
-  application_id Int        @id @default(autoincrement())
-  student_id     Int
-  drive_id       Int
-  status_id      Int
-  proof_url         String?
-  created_at     DateTime   @default(now())
-  student        Student    @relation(fields: [student_id], references: [student_id])
-  drive          Drive      @relation(fields: [drive_id], references: [drive_id])
-  status         Status     @relation(fields: [status_id], references: [status_id])
 }
