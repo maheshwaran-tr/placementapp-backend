@@ -13,7 +13,7 @@ const getAllUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    const user = await userService.getUserById(id);
+    const user = await userService.findUserById(id);
     res.json(user);
   } catch (error) {
     const err = new Error(error.message);

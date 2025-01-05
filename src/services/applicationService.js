@@ -4,6 +4,7 @@ import prisma from "../config/prismaClient.js";
 const applyForDrive = async (studentId, driveId) => {
   try {
     // Check if the student has already applied for the drive
+    
     const existingApplication = await prisma.application.findFirst({
       where: {
         student_id: studentId,
@@ -12,7 +13,7 @@ const applyForDrive = async (studentId, driveId) => {
     });
 
     if (existingApplication) {
-      throw new Error("Student has already applied for this drive.");
+      throw new Error("Student has already applied for this drive");
     }
 
     // Fetch drive details and its eligibility criteria
@@ -21,7 +22,7 @@ const applyForDrive = async (studentId, driveId) => {
     });
 
     if (!drive) {
-      throw new Error("Drive not found.");
+      throw new Error("Drive not found");
     }
 
     // Destructure the drive's eligibility criteria
@@ -41,15 +42,15 @@ const applyForDrive = async (studentId, driveId) => {
 
     // Check if the student meets the eligibility criteria
     if (eligible_10th_mark && score_10th < eligible_10th_mark) {
-      throw new Error("Student does not meet the 10th eligibility criteria.");
+      throw new Error("Student does not meet the 10th eligibility criteria");
     }
 
     if (eligible_12th_mark && score_12th < eligible_12th_mark) {
-      throw new Error("Student does not meet the 12th eligibility criteria.");
+      throw new Error("Student does not meet the 12th eligibility criteria");
     }
 
     if (eligible_cgpa && cgpa < eligible_cgpa) {
-      throw new Error("Student does not meet the CGPA eligibility criteria.");
+      throw new Error("Student does not meet the CGPA eligibility criteria"); 
     }
 
     // Create the application with initial status (status_id: 1 for applying stage)

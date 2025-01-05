@@ -4,13 +4,14 @@ import applicationService from "../services/applicationService.js";
 const applyForDrive = async (req, res, next) => {
   try {
     const { student_id, drive_id } = req.body;
+    console.log(drive_id);
 
-    const application = await applicationService.applyForDrive(student_id, drive_id);
+    const application = await applicationService.applyForDrive(parseInt(student_id), parseInt(drive_id));
 
     res.status(201).json(application);
 
   } catch (error) {
-    const err = new Error(`Error in applying for drive - ${error.message}`);
+    const err = new Error(error.message);
     err.statusCode = 400;
     next(err);
   }
