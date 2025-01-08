@@ -14,6 +14,7 @@ import errorHandler from "./middlewares/errorHandler.js";
 import departmentRoutes from "./routes/departmentRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import statusRoutes from "./routes/statusRoutes.js";
+import excelRoutes from "./routes/excelRoutes.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use("/file", fileRoutes);
 app.use("/dept", departmentRoutes);
 app.use("/application", applicationRoutes);
 app.use("/status", statusRoutes);
+app.use("/excel", excelRoutes)
 
 // Home route
 app.get("/", (req, res) => {

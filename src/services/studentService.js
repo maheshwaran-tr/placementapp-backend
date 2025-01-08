@@ -5,13 +5,6 @@ const getAllStudents = async () => {
   try {
     const students = await prisma.student.findMany({
       include: {
-        user: {
-          select: {
-            user_id: true,
-            username: true,
-            email: true,
-          },
-        },
         department: true,
         applications: true,
       },
@@ -29,13 +22,6 @@ const getByRollno = async (rollno) => {
         rollno: rollno,
       },
       include: {
-        user: {
-          select: {
-            user_id: true,
-            username: true,
-            email: true,
-          },
-        },
         department: true,
         applications: true,
       },
@@ -53,13 +39,6 @@ const getByUserId = async (userId) => {
         userId: userId,
       },
       include: {
-        user: {
-          select: {
-            user_id: true,
-            username: true,
-            email: true,
-          },
-        },
         department: true,
         applications: true,
       },
@@ -77,13 +56,6 @@ const getByStudentId = async (studentId) => {
         student_id: studentId,
       },
       include: {
-        user: {
-          select: {
-            user_id: true,
-            username: true,
-            email: true,
-          },
-        },
         department: true,
         applications: true,
       },
@@ -101,13 +73,6 @@ const getStudentsByDept = async (deptId) => {
         dept_id: deptId,
       },
       include: {
-        user: {
-          select: {
-            user_id: true,
-            username: true,
-            email: true,
-          },
-        },
         department: true,
         applications: true,
       },
@@ -125,13 +90,6 @@ const getStudentsByPlacementWilling = async (placementWilling) => {
         placement_willing: placementWilling,
       },
       include: {
-        user: {
-          select: {
-            user_id: true,
-            username: true,
-            email: true,
-          },
-        },
         department: true,
         applications: true,
       },
@@ -209,7 +167,6 @@ const deleteByStudentId = async (studentId) => {
     throw new Error(error.message);
   }
 };
-
 
 export default {
   createStudent,
