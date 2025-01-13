@@ -8,7 +8,9 @@ import bcrypt from "bcryptjs";
 import prisma from "../config/prismaClient.js";
 
 const login = async (req, res, next) => {
+  console.log("Login Hittedd....")
   const { username, password } = req.body;
+  console.log(username)
 
   try {
     // Find user by email

@@ -45,7 +45,7 @@ const getByStudentId = async (req, res, next) => {
 
 const getStudentsByDept = async (req, res, next) => {
   try {
-    const dept = req.params.dept;
+    const dept = parseInt(req.params.dept);
     const students = await studentService.getStudentsByDept(dept);
     res.json(students);
   } catch (error) {

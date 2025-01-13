@@ -10,17 +10,17 @@ datasource db {
 
 model Department {
   dept_id     Int       @id @default(autoincrement())
-  name        String    
-  description String?   
-  logo_url    String?   
+  name        String
+  description String?
+  logo_url    String?
   staff       Staff[]
   students    Student[]
 }
 
 model Status {
   status_id    Int           @id @default(autoincrement())
-  status       String        
-  description  String?       
+  status       String
+  description  String?
   applications Application[]
 }
 
@@ -39,31 +39,32 @@ model User {
 model Student {
   student_id         Int           @id @default(autoincrement())
   user_id            Int           @unique
-  rollno             String?       
-  regno              String?       
-  name               String        
+  rollno             String?
+  regno              String?
+  name               String
   dept_id            Int
-  gender             String?       
-  father_name        String?       
-  dob                String?       
+  gender             String?
+  father_name        String?
+  dob                String?
   score_10th         Int?
-  board_10th         String?       
+  board_10th         String?
   yop_10th           Int?
   score_12th         Int?
-  board_12th         String?       
+  board_12th         String?
   yop_12th           Int?
   score_diploma      Int?
-  branch_diploma     String?       
+  branch_diploma     String?
   yop_diploma        Int?
   cgpa               Float?
-  phone_number       String?       
-  email              String?       
-  placement_willing  String?       
+  phone_number       String?
+  email              String?
+  placement_willing  String?
   created_at         DateTime      @default(now())
   current_arrears    Int           @default(0)
   history_of_arrears Int           @default(0)
   resume_url         String?
-  profile_url        String?      
+  profile_url        String?
+  section            String?       @default("A")
   applications       Application[]
   department         Department    @relation(fields: [dept_id], references: [dept_id])
   user               User          @relation(fields: [user_id], references: [user_id])
@@ -72,13 +73,13 @@ model Student {
 model Staff {
   staff_id     Int        @id @default(autoincrement())
   user_id      Int        @unique
-  staff_rollno String?    
+  staff_rollno String?
   dept_id      Int
-  name         String     @default("Arun")
-  phone_number String?    
-  email        String?    
+  phone_number String?
+  email        String?
   created_at   DateTime   @default(now())
-  profile_url  String?    
+  profile_url  String?
+  name         String     @default("Arun")
   department   Department @relation(fields: [dept_id], references: [dept_id])
   user         User       @relation(fields: [user_id], references: [user_id])
 }
@@ -86,44 +87,44 @@ model Staff {
 model Admin {
   admin_id     Int      @id @default(autoincrement())
   user_id      Int      @unique
-  phone_number String?  
-  email        String?  
+  phone_number String?
+  email        String?
   created_at   DateTime @default(now())
-  admin_rollno String?  
-  name         String?  
-  profile_url  String?  
+  admin_rollno String?
+  name         String?
+  profile_url  String?
   user         User     @relation(fields: [user_id], references: [user_id])
 }
 
 model Company {
   company_id   Int      @id @default(autoincrement())
-  company_name String   
+  company_name String
   created_at   DateTime @default(now())
-  logo_url     String?  
+  logo_url     String?
   drives       Drive[]
 }
 
 model Drive {
   drive_id                    Int           @id @default(autoincrement())
   company_id                  Int
-  job_role                    String        
-  location                    String?       
-  description                 String?       
-  salary                      String?       
+  job_role                    String
+  location                    String?
+  description                 String?
+  salary                      String?
   drive_date                  DateTime?
-  drive_time                  String?       
+  drive_time                  String?
   eligible_10th_mark          Int?
   eligible_12th_mark          Int?
   eligible_cgpa               Float?
   created_at                  DateTime      @default(now())
-  training_period             String?       
-  training_stipend            String?       
+  training_period             String?
+  training_stipend            String?
   eligible_current_arrears    Int?
   eligible_history_of_arrears Int?
   job_type                    String?
-  number_of_rounds            Int
   required_skills             String[]
   venue                       String?
+  number_of_rounds            Int
   applications                Application[]
   company                     Company       @relation(fields: [company_id], references: [company_id])
 }

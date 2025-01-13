@@ -21,6 +21,7 @@ const allStaffs = async () => {
 };
 
 const getByStaffId = async (id) => {
+  console.log(id)
   try {
     const staff = await prisma.staff.findUnique({
       where: {
@@ -37,6 +38,7 @@ const getByStaffId = async (id) => {
         }
       }
     });
+    console.log(staff)
     return staff;
   } catch (error) {
     throw new Error(error.message);

@@ -15,6 +15,7 @@ import departmentRoutes from "./routes/departmentRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import statusRoutes from "./routes/statusRoutes.js";
 import excelRoutes from "./routes/excelRoutes.js";
+import pdfRoutes from "./routes/pdfRouter.js";
 
 dotenv.config();
 
@@ -36,7 +37,8 @@ app.use("/file", fileRoutes);
 app.use("/dept", departmentRoutes);
 app.use("/application", applicationRoutes);
 app.use("/status", statusRoutes);
-app.use("/excel", excelRoutes)
+app.use("/excel", excelRoutes);
+app.use("/pdf",pdfRoutes);
 
 // Home route
 app.get("/", (req, res) => {
